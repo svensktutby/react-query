@@ -1,7 +1,19 @@
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+import Films from './Films';
+
 import './App.css';
 
-function App() {
-    return <div className="App">App</div>;
-}
+const queryClient = new QueryClient();
+
+const App = () => {
+    return (
+        <QueryClientProvider client={queryClient}>
+            <div className="app">
+                <Films />
+            </div>
+        </QueryClientProvider>
+    );
+};
 
 export default App;
