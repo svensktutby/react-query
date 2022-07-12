@@ -8,9 +8,13 @@ const Films = () => {
         isFetching,
         isError,
         error,
-    } = useQuery('key', () => {
-        return fetch('http://swapi.dev/api/films').then((res) => res.json());
-    });
+    } = useQuery(
+        'key',
+        () => {
+            return fetch('http://swapi.dev/api/films').then((res) => res.json());
+        },
+        { staleTime: 5000 },
+    );
 
     if (isError) return <div>{error.message}</div>;
     if (isLoading) return <div>Loading...</div>;
