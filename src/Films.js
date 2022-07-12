@@ -1,23 +1,16 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 
-const Films = () => {
+const Films = ({ queryKey }) => {
     const {
         data: { results = [] } = {},
         isLoading,
         isFetching,
         isError,
         error,
-    } = useQuery(
-        'key',
-        () => {
-            return fetch('http://swapi.dev/api/films').then((res) => res.json());
-        },
-        {
-            staleTime: 5000,
-            cacheTime: 5000,
-        },
-    );
+    } = useQuery(queryKey, () => {
+        return fetch('http://swapi.dev/api/films').then((res) => res.json());
+    });
 
     if (isError) return <div>{error.message}</div>;
     if (isLoading) return <div>Loading...</div>;

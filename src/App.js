@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
@@ -17,12 +16,11 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-    const [isOpen, setIsOpen] = useState(false);
     return (
         <QueryClientProvider client={queryClient}>
             <div className="app">
-                <button onClick={() => setIsOpen(!isOpen)}>Toggle</button>
-                {isOpen && <Films />}
+                <Films queryKey="films1" />
+                <Films queryKey="films2" />
             </div>
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
