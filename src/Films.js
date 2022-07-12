@@ -5,6 +5,7 @@ const Films = () => {
     const {
         data: { results = [] } = {},
         isLoading,
+        isFetching,
         isError,
         error,
     } = useQuery('key', () => {
@@ -13,6 +14,7 @@ const Films = () => {
 
     if (isError) return <div>{error.message}</div>;
     if (isLoading) return <div>Loading...</div>;
+    if (isFetching) return <div>Fetching...</div>;
 
     return (
         <ul>
