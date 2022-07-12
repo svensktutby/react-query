@@ -13,7 +13,10 @@ const Films = () => {
         () => {
             return fetch('http://swapi.dev/api/films').then((res) => res.json());
         },
-        { staleTime: 5000 },
+        {
+            staleTime: 5000,
+            cacheTime: 5000,
+        },
     );
 
     if (isError) return <div>{error.message}</div>;

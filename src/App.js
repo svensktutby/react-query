@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
@@ -10,15 +11,18 @@ const queryClient = new QueryClient({
         queries: {
             refetchOnWindowFocus: false,
             // staleTime: Infinity,
+            // cacheTime: 5000,
         },
     },
 });
 
 const App = () => {
+    const [isOpen, setIsOpen] = useState(false);
     return (
         <QueryClientProvider client={queryClient}>
             <div className="app">
-                <Films />
+                <button onClick={() => setIsOpen(!isOpen)}>Toggle</button>
+                {isOpen && <Films />}
             </div>
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
