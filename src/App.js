@@ -19,8 +19,7 @@ const App = () => {
     return (
         <QueryClientProvider client={queryClient}>
             <div className="app">
-                <Films queryKey="films1" />
-                <Films queryKey="films2" />
+                <Films />
             </div>
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
