@@ -5,9 +5,13 @@ const useGetFilm = (film = '') =>
     useQuery(
         ['films', film],
         () => {
-            return fetch(`http://swapi.dev/api/films?&search=${film}`).then((res) => res.json());
+            return fetch(`http://swapi.deev/api/films?&search=${film}`).then((res) => res.json());
         },
-        { enabled: !!film.length },
+        {
+            retry: 5, // default: 3
+            retryDelay: 1000, // default: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30_000)
+            enabled: !!film.length,
+        },
     );
 
 const SearchFilm = ({ film }) => {
