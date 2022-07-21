@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 
 const useGetFilm = (film = '') =>
     useQuery(
-        film,
+        ['films', film],
         () => {
             return fetch(`http://swapi.dev/api/films?&search=${film}`).then((res) => res.json());
         },
