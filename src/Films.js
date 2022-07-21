@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 
-const useGetFilm = (film) =>
-    useQuery(film, () => {
-        return fetch(`http://swapi.dev/api/films?&search=${film}`).then((res) => res.json());
-    });
+const useGetFilm = (film = '') =>
+    useQuery(
+        film,
+        () => {
+            return fetch(`http://swapi.dev/api/films?&search=${film}`).then((res) => res.json());
+        },
+        { enabled: !!film.length },
+    );
 
 const SearchFilm = ({ film }) => {
     const { data: { results = [] } = {}, isLoading, isFetching, isError, error } = useGetFilm(film);
