@@ -9,6 +9,9 @@ const useGetPlanet = (planetUrl = '') =>
         },
         {
             enabled: !!planetUrl.length,
+            initialData: {
+                name: 'initial name',
+            },
         },
     );
 
