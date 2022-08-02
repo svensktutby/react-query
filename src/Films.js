@@ -1,50 +1,40 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
-import { Planet } from './Planet';
+import { FilmPage } from './FilmPage';
 
-const useGetFilm = (film = '') =>
-    useQuery(
-        ['films', film],
-        () => {
-            return fetch(`http://swapi.dev/api/films?&search=${film}`).then((res) => res.json());
-        },
-        {
-            retry: 2,
-            enabled: !!film.length,
-        },
-    );
+const useGetFilms = () =>
+    useQuery(['films'], () => {
+        return fetch('https://swapi.dev/api/films').then((res) => res.json());
+    });
 
-const SearchFilm = ({ film }) => {
-    const { data: { results = [] } = {}, isLoading, isFetching, isError, error } = useGetFilm(film);
+const Films = () => {
+    const [filmUrl, setFilmUrl] = useState('');
+    const { data: { results = [] } = {}, isLoading, isFetching, isError, error } = useGetFilms();
 
     if (isError) return <div>{error.message}</div>;
     if (isLoading) return <div>Loading...</div>;
     if (isFetching) return <div>Fetching...</div>;
 
+    if (filmUrl.length) {
+        return (
+            <>
+                <button onClick={() => setFilmUrl('')}>Go back</button>
+                <FilmPage url={filmUrl} />
+            </>
+        );
+    }
+
     return (
-        <>
-            <ul>
-                {results?.map(({ title, episode_id, planets }) => (
-                    <li key={episode_id}>
+        <ul>
+            {results?.map(({ title, episode_id, url }) => (
+                <li key={episode_id}>
+                    <b>Film: </b>
+                    <a href="#" onClick={() => setFilmUrl(url)}>
                         {title}
-                        {planets?.map((planet) => (
-                            <Planet key={planet} planetUrl={planet} />
-                        ))}
-                    </li>
-                ))}
-            </ul>
-        </>
-    );
-};
-
-const Films = () => {
-    const [film, setFilm] = useState('');
-
-    return (
-        <>
-            <input type="text" value={film} onChange={({ target: { value } }) => setFilm(value)} />
-            <SearchFilm film={film} />
-        </>
+                    </a>
+                </li>
+            ))}
+        </ul>
     );
 };
 
