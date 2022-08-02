@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
+import { Planet } from './Planet';
 
 const useGetFilm = (film = '') =>
     useQuery(
         ['films', film],
         () => {
-            return fetch(`http://swapi.deev/api/films?&search=${film}`).then((res) => res.json());
+            return fetch(`http://swapi.dev/api/films?&search=${film}`).then((res) => res.json());
         },
         {
-            retry: 5, // default: 3
-            retryDelay: 1000, // default: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30_000)
+            retry: 2,
             enabled: !!film.length,
         },
     );
@@ -24,8 +24,13 @@ const SearchFilm = ({ film }) => {
     return (
         <>
             <ul>
-                {results?.map(({ title, episode_id }) => (
-                    <li key={episode_id}>{title}</li>
+                {results?.map(({ title, episode_id, planets }) => (
+                    <li key={episode_id}>
+                        {title}
+                        {planets?.map((planet) => (
+                            <Planet key={planet} planetUrl={planet} />
+                        ))}
+                    </li>
                 ))}
             </ul>
         </>
