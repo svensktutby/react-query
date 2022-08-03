@@ -1,17 +1,27 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import { useQuery } from 'react-query';
 
-const useGetFilm = (url = '') =>
-    useQuery(
+export const FilmPage = ({ url }) => {
+    const [count, increment] = useReducer((c) => c + 1, 0);
+
+    const {
+        data = {},
+        isLoading,
+        isFetching,
+    } = useQuery(
         ['film', url],
         () => {
             return fetch(url).then((res) => res.json());
         },
-        { enabled: !!url.length },
+        {
+            enabled: !!url.length,
+            onSuccess: (data) => {
+                increment();
+            },
+            onError: (error) => {},
+            onSettled: (data, error) => {},
+        },
     );
-
-export const FilmPage = ({ url }) => {
-    const { data = {}, isLoading, isFetching } = useGetFilm(url);
 
     const getLoadingText = (text) => {
         if (isLoading) return <span style={{ color: 'navy' }}>Loading...</span>;
@@ -26,7 +36,7 @@ export const FilmPage = ({ url }) => {
             <h3>Description:</h3>
             <p>{getLoadingText(data.opening_crawl)}</p>
             <hr />
-            {isFetching && <span style={{ color: 'coral' }}>Updating...</span>}
+            {isFetching && <span style={{ color: 'coral' }}>Updating... #{count}</span>}
         </div>
     );
 };
