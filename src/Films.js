@@ -1,15 +1,24 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
+
+import { queryClient } from './App';
 import { FilmPage } from './FilmPage';
 
 const useGetFilms = () =>
     useQuery(['films'], () => {
-        return fetch('https://swapi.dev/api/films').then((res) => res.json());
+        return fetch('https://swapi.dev/api/films')
+            .then((res) => res.json())
+            .then(({ results }) => {
+                results.forEach((film) => {
+                    queryClient.setQueryData(['film', film.url], film);
+                });
+                return results;
+            });
     });
 
 const Films = () => {
     const [filmUrl, setFilmUrl] = useState('');
-    const { data: { results = [] } = {}, isLoading, isFetching, isError, error } = useGetFilms();
+    const { data = [], isLoading, isFetching, isError, error } = useGetFilms();
 
     if (isError) return <div>{error.message}</div>;
     if (isLoading) return <div>Loading...</div>;
@@ -26,7 +35,7 @@ const Films = () => {
 
     return (
         <ul>
-            {results?.map(({ title, episode_id, url }) => (
+            {data?.map(({ title, episode_id, url }) => (
                 <li key={episode_id}>
                     <b>Film: </b>
                     <a href="#" onClick={() => setFilmUrl(url)}>

@@ -1,26 +1,20 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 
-import { queryClient } from './App';
-
 const useGetFilm = (url = '') =>
     useQuery(
         ['film', url],
         () => {
             return fetch(url).then((res) => res.json());
         },
-        {
-            enabled: !!url.length,
-            initialData: () => queryClient.getQueryData('films')?.results?.find((film) => film.url === url),
-        },
+        { enabled: !!url.length },
     );
 
 export const FilmPage = ({ url }) => {
     const { data = {}, isLoading, isFetching } = useGetFilm(url);
 
     const getLoadingText = (text) => {
-        if (isLoading) return <span>Loading...</span>;
-        if (isFetching) return <span>Updating...</span>;
+        if (isLoading) return <span style={{ color: 'navy' }}>Loading...</span>;
         return <>{text}</>;
     };
 
@@ -31,6 +25,8 @@ export const FilmPage = ({ url }) => {
             {getLoadingText(data.episode_id)}
             <h3>Description:</h3>
             <p>{getLoadingText(data.opening_crawl)}</p>
+            <hr />
+            {isFetching && <span style={{ color: 'coral' }}>Updating...</span>}
         </div>
     );
 };
