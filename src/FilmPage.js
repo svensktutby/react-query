@@ -1,8 +1,13 @@
 import React, { useReducer } from 'react';
 import { useQuery } from 'react-query';
+import { useParams, useNavigate } from 'react-router-dom';
 
-export const FilmPage = ({ url }) => {
+export const FilmPage = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
     const [count, increment] = useReducer((c) => c + 1, 0);
+
+    const url = `http://swapi.dev/api/films/${id}/`;
 
     const {
         data = {},
@@ -30,6 +35,7 @@ export const FilmPage = ({ url }) => {
 
     return (
         <div>
+            <button onClick={() => navigate(-1)}>Go Back</button>
             <h1>{getLoadingText(data.title)}</h1>
             <b>Episode: </b>
             {getLoadingText(data.episode_id)}
