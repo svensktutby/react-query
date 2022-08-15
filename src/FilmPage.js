@@ -2,6 +2,8 @@ import React, { useReducer } from 'react';
 import { useQuery } from 'react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import { queryClient } from './App';
+
 export const FilmPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -42,6 +44,13 @@ export const FilmPage = () => {
             <h3>Description:</h3>
             <p>{getLoadingText(data.opening_crawl)}</p>
             <hr />
+            <button
+                onClick={() => {
+                    queryClient.invalidateQueries(['film', url]);
+                }}
+            >
+                Update data
+            </button>
             {isFetching && <span style={{ color: 'coral' }}>Updating... #{count}</span>}
         </div>
     );
