@@ -4,12 +4,37 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 import { queryClient } from './App';
 
-export const FilmPage = () => {
+const FilmPageWrapper = () => {
     const { id } = useParams();
-    const navigate = useNavigate();
-    const [count, increment] = useReducer((c) => c + 1, 0);
+    const [isShow, toggle] = useReducer((isShow) => !isShow);
 
     const url = `http://swapi.dev/api/films/${id}/`;
+
+    return (
+        <>
+            <button onClick={toggle}>Toggle visibility</button>
+            <button
+                onClick={() => {
+                    queryClient.invalidateQueries(['film', url], { refetchActive: false });
+                }}
+            >
+                Stale data
+            </button>
+            <button
+                onClick={() => {
+                    queryClient.invalidateQueries(['film', url], { refetchInactive: true });
+                }}
+            >
+                Update inactive data
+            </button>
+            {isShow ? <FilmPage url={url} /> : null}
+        </>
+    );
+};
+
+const FilmPage = ({ url }) => {
+    const navigate = useNavigate();
+    const [count, increment] = useReducer((c) => c + 1, 0);
 
     const {
         data = {},
@@ -44,14 +69,9 @@ export const FilmPage = () => {
             <h3>Description:</h3>
             <p>{getLoadingText(data.opening_crawl)}</p>
             <hr />
-            <button
-                onClick={() => {
-                    queryClient.invalidateQueries(['film', url], { refetchActive: false });
-                }}
-            >
-                Stale data
-            </button>
             {isFetching && <span style={{ color: 'coral' }}>Updating... #{count}</span>}
         </div>
     );
 };
+
+export default FilmPageWrapper;

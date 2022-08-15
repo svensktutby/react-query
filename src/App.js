@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
 import Films from './Films';
-import { FilmPage } from './FilmPage';
+import FilmPage from './FilmPage';
 
 import './App.css';
 
