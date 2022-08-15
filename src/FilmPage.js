@@ -46,10 +46,10 @@ export const FilmPage = () => {
             <hr />
             <button
                 onClick={() => {
-                    queryClient.invalidateQueries(['film', url]);
+                    queryClient.invalidateQueries(['film', url], { refetchActive: false });
                 }}
             >
-                Update data
+                Stale data
             </button>
             {isFetching && <span style={{ color: 'coral' }}>Updating... #{count}</span>}
         </div>
