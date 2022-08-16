@@ -1,32 +1,37 @@
-import React, { useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { useQuery } from 'react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import { queryClient } from './App';
 
+const fetchFilm = (url) => {
+    return fetch(url).then((res) => res.json());
+};
+
 const FilmPageWrapper = () => {
     const { id } = useParams();
-    const [isShow, toggle] = useReducer((isShow) => !isShow);
+    const [isShow, toggle] = useReducer((isShow) => !isShow, false);
 
     const url = `https://swapi.dev/api/films/${id}/`;
 
+    useEffect(() => {
+        queryClient.prefetchQuery(['film', url], () => fetchFilm(url));
+    }, [url]);
+
     return (
         <>
-            <button onClick={toggle}>Toggle visibility</button>
-            <button
-                onClick={() => {
-                    queryClient.invalidateQueries(['film', url], { refetchActive: false });
-                }}
-            >
-                Stale data
-            </button>
-            <button
-                onClick={() => {
-                    queryClient.invalidateQueries(['film', url], { refetchInactive: true });
-                }}
-            >
-                Update inactive data
-            </button>
+            <>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus at, cumque, dicta dolore eligendi
+                facilis impedit minus mollitia nesciunt quod rem rerum sed ullam, veniam voluptatem. Consequatur cumque
+                ea et iure maiores modi molestiae. Ab accusantium ad animi asperiores beatae, blanditiis deleniti
+                dolorem, ducimus est et, magnam maiores molestiae pariatur perspiciatis recusandae reprehenderit saepe
+                sed sint sunt suscipit. Alias aliquam, beatae, consectetur eaque excepturi, incidunt ipsam laborum
+                maiores molestiae neque nihil obcaecati quia tempore ullam velit? Aspernatur distinctio doloremque ex
+                impedit maiores possimus quam quia quisquam reprehenderit veritatis! Deleniti eligendi facere fugiat in
+                incidunt laborum nesciunt non officia rerum veritatis!
+            </>
+            <br />
+            <button onClick={toggle}>{isShow ? 'Hide' : 'Show'} movie info</button>
             {isShow ? <FilmPage url={url} /> : null}
         </>
     );
@@ -40,20 +45,14 @@ const FilmPage = ({ url }) => {
         data = {},
         isLoading,
         isFetching,
-    } = useQuery(
-        ['film', url],
-        () => {
-            return fetch(url).then((res) => res.json());
+    } = useQuery(['film', url], () => fetchFilm(url), {
+        enabled: !!url.length,
+        onSuccess: (data) => {
+            increment();
         },
-        {
-            enabled: !!url.length,
-            onSuccess: (data) => {
-                increment();
-            },
-            onError: (error) => {},
-            onSettled: (data, error) => {},
-        },
-    );
+        onError: (error) => {},
+        onSettled: (data, error) => {},
+    });
 
     const getLoadingText = (text) => {
         if (isLoading) return <span style={{ color: 'navy' }}>Loading...</span>;
