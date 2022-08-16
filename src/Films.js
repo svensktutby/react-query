@@ -24,14 +24,23 @@ const Films = () => {
     if (isFetching) return <div>Fetching...</div>;
 
     return (
-        <ul>
-            {data?.map(({ title, episode_id, url }) => (
-                <li key={episode_id}>
-                    <b>Film: </b>
-                    <Link to={url.replace('https://swapi.dev/api/films/', '')}>{title}</Link>
-                </li>
-            ))}
-        </ul>
+        <>
+            <button
+                onClick={() => {
+                    queryClient.invalidateQueries('film', { refetchInactive: true });
+                }}
+            >
+                Update all movies
+            </button>
+            <ul>
+                {data?.map(({ title, episode_id, url }) => (
+                    <li key={episode_id}>
+                        <b>Film: </b>
+                        <Link to={url.replace('https://swapi.dev/api/films/', '')}>{title}</Link>
+                    </li>
+                ))}
+            </ul>
+        </>
     );
 };
 

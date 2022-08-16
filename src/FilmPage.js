@@ -8,7 +8,7 @@ const FilmPageWrapper = () => {
     const { id } = useParams();
     const [isShow, toggle] = useReducer((isShow) => !isShow);
 
-    const url = `http://swapi.dev/api/films/${id}/`;
+    const url = `https://swapi.dev/api/films/${id}/`;
 
     return (
         <>
