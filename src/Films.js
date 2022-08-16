@@ -3,17 +3,13 @@ import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 
 import { queryClient } from './App';
+import { fetchFilm } from './FilmPage';
 
 const useGetFilms = () =>
     useQuery(['films'], () =>
         fetch('https://swapi.dev/api/films')
             .then((res) => res.json())
-            .then(({ results }) => {
-                results.forEach((film) => {
-                    queryClient.setQueryData(['film', film.url], film);
-                });
-                return results;
-            }),
+            .then(({ results }) => results),
     );
 
 const Films = () => {
@@ -34,7 +30,12 @@ const Films = () => {
             </button>
             <ul>
                 {data?.map(({ title, episode_id, url }) => (
-                    <li key={episode_id}>
+                    <li
+                        key={episode_id}
+                        onMouseEnter={() =>
+                            queryClient.prefetchQuery(['film', url], () => fetchFilm(url), { staleTime: Infinity })
+                        }
+                    >
                         <b>Film: </b>
                         <Link to={url.replace('https://swapi.dev/api/films/', '')}>{title}</Link>
                     </li>

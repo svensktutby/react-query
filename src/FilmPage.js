@@ -1,22 +1,16 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import { useQuery } from 'react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { queryClient } from './App';
-
-const fetchFilm = (url) => {
+export const fetchFilm = (url) => {
     return fetch(url).then((res) => res.json());
 };
 
 const FilmPageWrapper = () => {
     const { id } = useParams();
-    const [isShow, toggle] = useReducer((isShow) => !isShow, false);
+    const [isShow, toggle] = useReducer((isShow) => !isShow, true);
 
     const url = `https://swapi.dev/api/films/${id}/`;
-
-    useEffect(() => {
-        queryClient.prefetchQuery(['film', url], () => fetchFilm(url));
-    }, [url]);
 
     return (
         <>
