@@ -1,9 +1,8 @@
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
-import Films from './Films';
-import FilmPage from './FilmPage';
+import { Todos } from './Todos';
 
 import './App.css';
 
@@ -22,10 +21,7 @@ const App = () => {
         <Router>
             <QueryClientProvider client={queryClient}>
                 <div className="app">
-                    <Routes>
-                        <Route path="/:id" element={<FilmPage />} />
-                        <Route path="/" element={<Films />} />
-                    </Routes>
+                    <Todos />
                 </div>
                 <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
