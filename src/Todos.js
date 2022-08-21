@@ -4,10 +4,18 @@ import { TodoForm } from './TodoForm';
 import fetchMock from 'fetch-mock';
 
 const todosMock = ['walk with dog', 'read book', 'make dinner'];
+const wrongWords = ['smoke', 'drink'];
 fetchMock.get('api/todos', todosMock);
 fetchMock.post(
     'api/todos',
     async (_, res) => {
+        const isWrong = wrongWords.includes(res.body);
+        if (isWrong) {
+            return new Response('', {
+                status: 400,
+                statusText: 'Wrong todo',
+            });
+        }
         todosMock.push(res.body);
         return 200;
     },
@@ -29,13 +37,12 @@ export const Todos = () => {
                 <div>Loading...</div>
             ) : (
                 <>
+                    <h3>My todo list{isFetching && '...'}</h3>
                     <ul>
                         {todos.map((todo, idx) => (
                             <li key={idx}>{todo}</li>
                         ))}
                     </ul>
-                    <div>{isFetching && 'Updating...'}</div>
-                    <br />
                     <TodoForm />
                 </>
             )}

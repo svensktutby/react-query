@@ -5,11 +5,19 @@ import { queryClient } from './App';
 export const TodoForm = () => {
     const [todo, setTodo] = useState('');
 
-    const { mutate, isLoading, isError, isSuccess } = useMutation(
-        (todo) => fetch('api/todos', { method: 'POST', body: todo }),
+    const { mutate, isLoading, isError, error, isSuccess } = useMutation(
+        (todo) =>
+            fetch('api/todos', { method: 'POST', body: todo }).then((res) => {
+                if (!res.ok) {
+                    throw new Error(res.statusText);
+                }
+            }),
         {
             onSuccess: () => {
                 setTodo('');
+            },
+            onError: (error) => alert(error.message),
+            onSettled: () => {
                 queryClient.invalidateQueries(['todo']);
             },
         },
@@ -32,6 +40,8 @@ export const TodoForm = () => {
             <button onClick={() => mutate(todo)} disabled={isLoading}>
                 {getButtonText()}
             </button>
+            <br />
+            {error && <span style={{ color: 'coral' }}>{error.message}</span>}
         </div>
     );
 };
