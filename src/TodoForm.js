@@ -6,19 +6,13 @@ export const TodoForm = () => {
     const [todo, setTodo] = useState('');
 
     const { mutate, isLoading, isError, error, isSuccess } = useMutation(
-        (todo) =>
-            fetch('api/todos', { method: 'POST', body: todo }).then((res) => {
-                if (!res.ok) {
-                    throw new Error(res.statusText);
-                }
-            }),
+        (todo) => fetch('api/todos', { method: 'POST', body: todo }),
         {
             onSuccess: () => {
                 setTodo('');
             },
-            onError: (error) => alert(error.message),
             onSettled: () => {
-                queryClient.invalidateQueries(['todo']);
+                queryClient.invalidateQueries(['todos']);
             },
         },
     );

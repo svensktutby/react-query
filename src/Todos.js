@@ -1,35 +1,15 @@
 import React from 'react';
 import { useQuery } from 'react-query';
-import { TodoForm } from './TodoForm';
-import fetchMock from 'fetch-mock';
+import { Link } from 'react-router-dom';
 
-const todosMock = ['walk with dog', 'read book', 'make dinner'];
-const wrongWords = ['smoke', 'drink'];
-fetchMock.get('api/todos', todosMock);
-fetchMock.post(
-    'api/todos',
-    async (_, res) => {
-        const isWrong = wrongWords.includes(res.body);
-        if (isWrong) {
-            return new Response('', {
-                status: 400,
-                statusText: 'Wrong todo',
-            });
-        }
-        todosMock.push(res.body);
-        return 200;
-    },
-    {
-        delay: 1000, // fake a slow network
-    },
-);
+import { TodoForm } from './TodoForm';
 
 export const Todos = () => {
     const {
         data: todos = [],
         isLoading,
         isFetching,
-    } = useQuery(['todo'], () => fetch('api/todos').then((res) => res.json()));
+    } = useQuery(['todos'], () => fetch('api/todos').then((res) => res.json()));
 
     return (
         <>
@@ -39,8 +19,10 @@ export const Todos = () => {
                 <>
                     <h3>My todo list{isFetching && '...'}</h3>
                     <ul>
-                        {todos.map((todo, idx) => (
-                            <li key={idx}>{todo}</li>
+                        {todos.map((todo) => (
+                            <li key={todo.id}>
+                                <Link to={`/todo/${todo.id}`}>{todo.name}</Link>
+                            </li>
                         ))}
                     </ul>
                     <TodoForm />
