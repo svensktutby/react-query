@@ -20,7 +20,7 @@ fetchMock.post(
         return 200;
     },
     {
-        delay: 1000, // fake a slow network
+        delay: 2000, // fake a slow network
     },
 );
 
