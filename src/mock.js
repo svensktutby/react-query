@@ -8,7 +8,7 @@ const todosMock = [
 const wrongWords = ['smoke', 'drink'];
 
 // todos
-fetchMock.get('api/todos', todosMock);
+fetchMock.get('api/todos', todosMock, { delay: 3000 });
 fetchMock.post(
     'api/todos',
     async (_, res) => {

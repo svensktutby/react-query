@@ -9,16 +9,20 @@ export const TodoForm = () => {
         (todo) => fetch('api/todos', { method: 'POST', body: todo }),
         {
             onMutate: (value) => {
+                const oldTodos = queryClient.getQueryData(['todos']);
                 queryClient.setQueryData(['todos'], (oldTodos) => [
                     ...oldTodos,
                     { id: new Date().getTime(), name: value },
                 ]);
+
+                return () => queryClient.setQueryData(['todos'], oldTodos);
             },
             onSuccess: () => {
                 setTodo('');
             },
-            onError: (error) => {
-                alert(`Error: ${error.message}`);
+            onError: (error, value, rollback) => {
+                if (typeof rollback === 'function') rollback();
+                alert(error);
             },
             onSettled: () => {
                 queryClient.invalidateQueries(['todos']);
